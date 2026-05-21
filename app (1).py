@@ -9,12 +9,8 @@
 # ==========================================
 
 import streamlit as st
-from urllib.parse import quote_plus
 import pandas as pd
 import numpy as np
-
-from sqlalchemy import create_engine
-
 
 from sklearn.ensemble import RandomForestClassifier
 
@@ -79,29 +75,6 @@ st.markdown("---")
 # ==========================================
 # MYSQL CONNECTION
 # ==========================================
-
-@st.cache_data
-def load_data():
-
-    params = quote_plus(
-        "DRIVER={ODBC Driver 17 for SQL Server};"
-        "SERVER=LAPTOP-GVLRNBIP;"
-        "DATABASE=data15k;"
-        "Trusted_Connection=yes;"
-    )
-
-    engine = create_engine(
-        f"mssql+pyodbc:///?odbc_connect={params}"
-    )
-
-    query = """
-    SELECT *
-    FROM dbo.final_dataset_15k
-    """
-
-    df = pd.read_sql(query, engine)
-
-    return df
 
 # ==========================================
 # DATA PREPROCESSING FUNCTION
@@ -197,10 +170,8 @@ def preprocess_data(df):
 # ==========================================
 # LOAD DATA
 # ==========================================
-
-with st.spinner("Loading data from SQL..."):
-
-    df = load_data()
+with st.spinner("Loading data from CSV..."):
+    df = pd.read_csv("final_dataset_15k.csv")
 
 # ==========================================
 # PREPROCESS DATA
